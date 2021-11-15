@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sergiorivera.demo04network.R
+import com.sergiorivera.demo04network.databinding.FragmentRepositoryDetailBinding
 
 class RepositoryDetailFragment : Fragment() {
     private var repositoryId: String? = null
-    private lateinit var tvRepoId: TextView
+    private var _binding: FragmentRepositoryDetailBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,13 +27,18 @@ class RepositoryDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_repository_detail, container, false)
+        _binding = FragmentRepositoryDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tvRepoId = view.findViewById(R.id.tv_repo_id)
-        tvRepoId.text = repositoryId
+        binding.tvRepoId.text = repositoryId
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
