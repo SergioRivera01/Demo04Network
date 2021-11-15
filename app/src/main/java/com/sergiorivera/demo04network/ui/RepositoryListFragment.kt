@@ -5,15 +5,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sergiorivera.demo04network.R
 import com.sergiorivera.demo04network.databinding.FragmentRepositoryListBinding
+import com.sergiorivera.demo04network.model.Repository
 
 
 class RepositoryListFragment : Fragment() {
     private var _binding: FragmentRepositoryListBinding? = null
     private val binding
         get() = _binding!!
+
+    private val adapter = RepositoryAdapter {
+        val fg = RepositoryDetailFragment.newInstance(it.id)
+        parentFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .replace(R.id.Container, fg)
+            .addToBackStack("repository")
+            .commit()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,15 +39,14 @@ class RepositoryListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val fg = RepositoryDetailFragment.newInstance("123")
-        binding.tvClickMe.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.Container, fg)
-                .setReorderingAllowed(true)
-                .addToBackStack("repository")
-                .commit()
-        }
+        binding.rvRepository.adapter = adapter
+        binding.rvRepository.layoutManager = LinearLayoutManager(context)
+        binding.rvRepository.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     override fun onDestroyView() {
